@@ -1,0 +1,26 @@
+{
+  "leather": {
+    "image_AUROC": 1.0,
+    "image_F1": 0.9945,
+    "pixel_AUROC": 0.993,
+    "pixel_F1": 0.4621
+  },
+  "tile": {
+    "image_AUROC": 0.9993,
+    "image_F1": 0.988,
+    "pixel_AUROC": 0.9517,
+    "pixel_F1": 0.6097
+  },
+  "metal_nut": {
+    "image_AUROC": 0.9946,
+    "image_F1": 0.9785,
+    "pixel_AUROC": 0.9847,
+    "pixel_F1": 0.8274
+  },
+  "wood": {
+    "image_AUROC": 0.9833,
+    "image_F1": 0.9573,
+    "pixel_AUROC": 0.9314,
+    "pixel_F1": 0.4616
+  }
+}
