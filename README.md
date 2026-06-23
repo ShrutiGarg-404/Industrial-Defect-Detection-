@@ -1,116 +1,75 @@
-# 🔍 Industrial Defect Detection
+# 🔍 DefectLens — Industrial Defect Detection
 
-An AI-powered defect detection system that identifies surface defects in industrial products using Computer Vision and Deep Learning techniques.
+> AI-powered visual inspection system built during a research internship at **CSIR-CSIO, Chandigarh**. Detects and localizes surface defects in industrial components using PatchCore anomaly detection — with **zero labeled defective training examples required**.
 
-This project is being developed as part of my internship at CSIR-CSIO, Chandigarh and focuses on automating quality inspection using the MVTec Anomaly Detection (MVTec AD) dataset.
-
----
-
-## 📌 Project Overview
-
-Manual inspection of manufactured products can be time-consuming and prone to human error. The goal of this project is to build a deep learning-based system that can:
-
-* Detect whether a product is defective or non-defective
-* Learn visual defect patterns from industrial images
-* Highlight defect regions using explainable AI techniques
-* Provide an easy-to-use interface for testing new images
+![Python](https://img.shields.io/badge/Python-3.10-blue?style=flat-square)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0-orange?style=flat-square)
+![Anomalib](https://img.shields.io/badge/Anomalib-2.5.0-purple?style=flat-square)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.58-red?style=flat-square)
 
 ---
 
-## 🧠 Technologies Used
+## Results
 
-* Python
-* PyTorch
-* OpenCV
-* NumPy
-* Matplotlib
-* Streamlit
-* Transfer Learning (ResNet18)
+| Category | Image AUROC | Pixel AUROC |
+|---|---|---|
+| Leather | **1.0000** | 0.9930 |
+| Tile | **0.9993** | 0.9517 |
+| Metal Nut | **0.9946** | 0.9847 |
+| Wood | **0.9833** | 0.9314 |
+| **Average** | **0.9943** | **0.9652** |
 
----
-
-## 📊 Dataset
-
-This project uses the **MVTec Anomaly Detection (MVTec AD)** dataset, a widely used benchmark for industrial defect detection.
-
-Selected categories:
-
-* Leather
-* Tile
-* Metal Nut
-
-Dataset Link:
-https://www.mvtec.com/company/research/datasets/mvtec-ad
+Trained on the [MVTec AD dataset](https://www.mvtec.com/research-teaching/datasets/mvtec-ad) using PatchCore + WideResNet50-2 backbone.
 
 ---
 
-## 🚀 Project Roadmap
+## Defect Localization
 
-### Phase 1
+Each inference produces an anomaly heatmap highlighting exactly where the defect is located:
 
-* Dataset exploration and preprocessing
-* Binary classification (Defective vs Non-Defective)
+**Leather** — Original · Anomaly Map · Overlay
+![Leather heatmaps](results/patchcore_heatmaps_leather.png)
 
-### Phase 2
-
-* Transfer learning using ResNet18
-* Model evaluation and performance analysis
-
-### Phase 3
-
-* Defect localization using Grad-CAM
-* Visualization of defect regions
-
-### Phase 4
-
-* Streamlit web application deployment
+**Metal Nut** — Original · Anomaly Map · Overlay
+![Metal Nut heatmaps](results/patchcore_heatmaps_metal_nut.png)
 
 ---
 
-## 📂 Project Structure
+## Baseline vs PatchCore
 
-```text
-industrial-defect-detection/
-│
-├── data/
-├── notebooks/
-├── src/
-├── models/
-├── outputs/
-├── app/
-├── requirements.txt
-└── README.md
+An early ResNet18 classifier baseline failed entirely — scoring 25.8% accuracy by always predicting "good," since the dataset contains only defect-free training images. This motivated the switch to anomaly detection.
+
+![Comparison chart](results/resnet_vs_patchcore_comparison.png)
+
+---
+
+## Live Demo App
+
+The **DefectLens** Streamlit app includes:
+- **Live Inspection** — real PatchCore inference with animated scan sweep, anomaly heatmap, and calibrated GOOD/DEFECTIVE verdict
+- **Quick Gallery** — interactive AUROC charts and pre-computed results
+- **How It Works** — step-by-step pipeline breakdown
+- **Session Log** — tracks all inspections run in the current session
+
+```bash
+pip install -r requirements.txt
+streamlit run app/streamlit_app.py
 ```
 
 ---
 
-## 📈 Evaluation Metrics
+## How It Works
 
-Model performance will be evaluated using:
+PatchCore builds a memory bank of patch-level features from defect-free training images. At inference, each patch is compared against this memory bank — patches that deviate significantly are flagged as anomalous, producing a per-pixel heatmap and an image-level anomaly score compared against a calibrated threshold.
 
-* Accuracy
-* Precision
-* Recall
-* F1-Score
-* ROC-AUC
+This approach mirrors real industrial settings, where defective samples are rare but defect-free production output is abundant.
 
 ---
 
-## 🎯 Future Enhancements
+## Tech Stack
 
-* Support for additional MVTec categories
-* Real-time defect inspection
-* Multi-class defect classification
-* Deployment on edge devices
+PyTorch · Anomalib 2.5.0 · WideResNet50-2 · OpenCV · Streamlit · Plotly · Google Colab (T4 GPU)
 
 ---
 
-## 👩‍💻 Author
-
-Shruti Garg
-
-B.Tech CSE, CCET Chandigarh
-
-Interests: Artificial Intelligence, Machine Learning, Computer Vision, and Web Development.
-
-
+*Research internship project · CSIR-CSIO, Chandigarh · June 2026*
