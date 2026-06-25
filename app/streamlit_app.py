@@ -18,6 +18,17 @@ from datetime import datetime
 from torchvision.transforms import v2 as T
 import plotly.graph_objects as go
 
+
+# Auto-download models if missing (for Streamlit Cloud deployment)
+from pathlib import Path as _Path
+_models_dir = _Path(__file__).parent.parent / "outputs" / "models"
+if not all((_models_dir / f"patchcore_{c}_full.pth").exists() for c in ["leather", "tile", "metal_nut", "wood"]):
+    import sys
+    sys.path.insert(0, str(_Path(__file__).parent.parent))
+    from download_models import download_models
+    download_models(_models_dir)
+
+    
 st.set_page_config(
     page_title="DefectLens",
     page_icon="◆",
