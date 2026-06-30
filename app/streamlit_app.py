@@ -233,6 +233,18 @@ def inject_css():
 # ============================================================
 # DATA / MODEL LOADING
 # ============================================================
+# @st.cache_resource(show_spinner=False)
+# def load_model_and_threshold(category):
+#     model_path = MODELS_DIR / f"patchcore_{category}_full.pth"
+#     if not model_path.exists():
+#         return None, None, None
+#     model = torch.load(model_path, map_location="cpu", weights_only=False)
+#     model.eval()
+#     pp = model.post_processor
+#     threshold = float(pp.image_threshold)
+#     stats = {"min": float(pp.image_min), "max": float(pp.image_max), "threshold": threshold}
+#     return model, threshold, stats
+
 @st.cache_resource(show_spinner=False)
 def load_model_and_threshold(category):
     model_path = MODELS_DIR / f"patchcore_{category}_full.pth"
@@ -241,7 +253,8 @@ def load_model_and_threshold(category):
     model = torch.load(model_path, map_location="cpu", weights_only=False)
     model.eval()
     pp = model.post_processor
-    threshold = float(pp.image_threshold)
+    base_threshold = float(pp.image_threshold)
+    threshold = base_threshold * 1.12  # safety margin: reduces false positives on borderline-normal samples
     stats = {"min": float(pp.image_min), "max": float(pp.image_max), "threshold": threshold}
     return model, threshold, stats
 
@@ -497,10 +510,6 @@ if page == "Live Inspection":
         selected_image = None
         true_label = None
 
-        # if input_mode == "Upload image":
-        #     uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
-        #     if uploaded_file:
-        #         selected_image = Image.open(uploaded_file)
         if input_mode == "Upload image":
             uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
             if uploaded_file:
