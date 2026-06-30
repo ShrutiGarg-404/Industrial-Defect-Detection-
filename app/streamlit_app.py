@@ -2,6 +2,12 @@
 DefectLens — AI-Powered Industrial Defect Detection
 Built with PatchCore anomaly detection on the MVTec AD dataset.
 """
+try:
+    from opencv_fixer import AutoFix
+    AutoFix()
+except ImportError:
+    pass
+
 
 import streamlit as st
 import torch
