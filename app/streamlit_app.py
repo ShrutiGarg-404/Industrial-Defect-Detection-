@@ -338,7 +338,6 @@ def render_bay_panel(image_array, label, animate=False, full_width=False):
     )
     st.markdown(html, unsafe_allow_html=True)
 
-
 def render_verdict(is_defective, raw_score, threshold, stats, elapsed_ms, true_label=None):
     status = "DEFECTIVE" if is_defective else "PASS"
     cls = "defective" if is_defective else "good"
@@ -351,29 +350,73 @@ def render_verdict(is_defective, raw_score, threshold, stats, elapsed_ms, true_l
     if true_label:
         actual = "GOOD" if true_label == "good" else f"DEFECTIVE · {true_label.upper()}"
         match = (is_defective == (true_label != "good"))
-        match_html = ('<span style="color:var(--green)">MATCHES GROUND TRUTH</span>' if match else
-                       '<span style="color:var(--red)">DIFFERS FROM GROUND TRUTH</span>')
-        truth_html = f'<div class="truth-row"><span>GROUND TRUTH: <b style="color:var(--text-primary)">{actual}</b></span>{match_html}</div>'
+        match_html = (
+            '<span style="color:var(--green)">MATCHES GROUND TRUTH</span>' if match else
+            '<span style="color:var(--red)">DIFFERS FROM GROUND TRUTH</span>'
+        )
+        truth_html = (
+            '<div class="truth-row"><span>GROUND TRUTH: <b style="color:var(--text-primary)">'
+            + actual + '</b></span>' + match_html + '</div>'
+        )
 
-    st.markdown(f"""
-    <div class="verdict-hero">
-        <div class="verdict-top {cls}">
-            <div class="verdict-num">SCAN RESULT · {elapsed_ms*1000:.0f}ms INFERENCE</div>
-            <div class="verdict-title {cls}">{status}</div>
-            <div class="verdict-sub">Anomaly score {raw_score:.2f} against calibrated threshold {threshold:.2f}</div>
-        </div>
-        <div class="verdict-bottom">
-            <div class="gauge-track">
-                <div class="gauge-fill" style="width:100%; background:{gradient};"></div>
-                <div class="gauge-marker" style="left:{pos_pct}%;"></div>
-            </div>
-            <div class="gauge-scale">
-                <span>{stats['min']:.0f} · NORMAL</span><span>THRESHOLD {threshold:.1f}</span><span>ANOMALOUS · {stats['max']:.0f}</span>
-            </div>
-            {truth_html}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    html = (
+        '<div class="verdict-hero">'
+        f'<div class="verdict-top {cls}">'
+        f'<div class="verdict-num">SCAN RESULT · {elapsed_ms*1000:.0f}ms INFERENCE</div>'
+        f'<div class="verdict-title {cls}">{status}</div>'
+        f'<div class="verdict-sub">Anomaly score {raw_score:.2f} against calibrated threshold {threshold:.2f}</div>'
+        '</div>'
+        '<div class="verdict-bottom">'
+        '<div class="gauge-track">'
+        f'<div class="gauge-fill" style="width:100%; background:{gradient};"></div>'
+        f'<div class="gauge-marker" style="left:{pos_pct}%;"></div>'
+        '</div>'
+        '<div class="gauge-scale">'
+        f"<span>{stats['min']:.0f} · NORMAL</span><span>THRESHOLD {threshold:.1f}</span><span>ANOMALOUS · {stats['max']:.0f}</span>"
+        '</div>'
+        f'{truth_html}'
+        '</div>'
+        '</div>'
+    )
+    st.markdown(html, unsafe_allow_html=True)
+
+    
+# def render_verdict(is_defective, raw_score, threshold, stats, elapsed_ms, true_label=None):
+#     status = "DEFECTIVE" if is_defective else "PASS"
+#     cls = "defective" if is_defective else "good"
+#     span = max(stats["max"] - stats["min"], 1e-6)
+#     pos_pct = max(0, min(100, (raw_score - stats["min"]) / span * 100))
+#     thresh_pct = max(0, min(100, (threshold - stats["min"]) / span * 100))
+#     gradient = f"linear-gradient(90deg, var(--green), var(--amber) {thresh_pct}%, var(--red))"
+
+#     truth_html = ""
+#     if true_label:
+#         actual = "GOOD" if true_label == "good" else f"DEFECTIVE · {true_label.upper()}"
+#         match = (is_defective == (true_label != "good"))
+#         match_html = ('<span style="color:var(--green)">MATCHES GROUND TRUTH</span>' if match else
+#                        '<span style="color:var(--red)">DIFFERS FROM GROUND TRUTH</span>')
+#         truth_html = f'<div class="truth-row"><span>GROUND TRUTH: <b style="color:var(--text-primary)">{actual}</b></span>{match_html}</div>'
+
+#     st.markdown(f"""
+#     <div class="verdict-hero">
+#         <div class="verdict-top {cls}">
+#             <div class="verdict-num">SCAN RESULT · {elapsed_ms*1000:.0f}ms INFERENCE</div>
+#             <div class="verdict-title {cls}">{status}</div>
+#             <div class="verdict-sub">Anomaly score {raw_score:.2f} against calibrated threshold {threshold:.2f}</div>
+#         </div>
+#         <div class="verdict-bottom">
+#             <div class="gauge-track">
+#                 <div class="gauge-fill" style="width:100%; background:{gradient};"></div>
+#                 <div class="gauge-marker" style="left:{pos_pct}%;"></div>
+#             </div>
+#             <div class="gauge-scale">
+#                 <span>{stats['min']:.0f} · NORMAL</span><span>THRESHOLD {threshold:.1f}</span><span>ANOMALOUS · {stats['max']:.0f}</span>
+#             </div>
+#             {truth_html}
+#         </div>
+#     </div>
+#     """, unsafe_allow_html=True)
+
 
 
 def stat_card(label, value, color_cls=""):
