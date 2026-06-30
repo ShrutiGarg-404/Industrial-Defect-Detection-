@@ -55,7 +55,8 @@ The **DefectLens** Streamlit app includes:
 pip install -r requirements.txt
 streamlit run app/streamlit_app.py
 ```
-
+### Calibration note
+Detection thresholds include a 12% safety margin above the model's raw fitted threshold, prioritizing fewer false alarms over maximum sensitivity — the standard tradeoff in industrial QA systems, where a human double-check is preferable to a missed defect reaching production.
 ---
 
 ## How It Works
