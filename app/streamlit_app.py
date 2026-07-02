@@ -612,9 +612,6 @@ def inject_css():
 #     .chip { font-size: 0.62rem; padding: 3px 7px; }
 }
     </style>
-                <div class="mobile-nav">
-    <span class="brand">◆ DefectLens</span>
-</div>
     """, unsafe_allow_html=True)
 
 
