@@ -74,6 +74,25 @@ def inject_css():
         --mono: 'JetBrains Mono', monospace; --display: 'Space Grotesk', sans-serif;
     }
 
+     /* Force Streamlit containers to not overflow on mobile */
+.block-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    max-width: 100% !important;
+}
+
+/* Make columns stack on very small screens */
+@media (max-width: 640px) {
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: none !important;
+    }
+    .block-container {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+}           
+
     html, body, [class*="css"] { font-family: var(--display); }
 
     .stApp {
@@ -226,6 +245,81 @@ def inject_css():
         border-radius: 6px; padding: 16px 20px; margin: 20px 0; font-size: 0.88rem; color: var(--text-secondary);
     }
     .limitation-banner b { color: var(--amber); }
+                /* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    h1 { font-size: 2rem !important; }
+    .verdict-title { font-size: 2.4rem; }
+    .page-hero { padding: 32px 28px; }
+    .page-hero h1 { font-size: 1.9rem !important; }
+    .stat-strip { gap: 10px; }
+    .stat-card .value { font-size: 1.5rem; }
+}
+
+/* Mobile (max 768px) */
+@media (max-width: 768px) {
+    h1 { font-size: 1.7rem !important; }
+    .verdict-title { font-size: 1.8rem !important; }
+    .verdict-top { padding: 20px 18px 16px 18px; }
+    .verdict-bottom { padding: 16px 18px 20px 18px; }
+    .verdict-sub { font-size: 0.8rem; }
+    .verdict-num { font-size: 0.72rem; }
+
+    .page-hero { padding: 24px 20px; }
+    .page-hero h1 { font-size: 1.6rem !important; }
+    .page-hero p { font-size: 0.9rem; }
+
+    .stat-strip { 
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .stat-card { min-width: unset; padding: 12px 14px; }
+    .stat-card .value { font-size: 1.4rem; }
+    .stat-card .label { font-size: 0.6rem; }
+
+    .chip-row { gap: 6px; }
+    .chip { font-size: 0.68rem; padding: 4px 9px; }
+
+    .bay-label { font-size: 0.6rem; padding: 6px 0 10px 0; }
+    .bay-corner { width: 14px; height: 14px; }
+    .bay-corner.tl { top: 6px; left: 6px; }
+    .bay-corner.tr { top: 6px; right: 6px; }
+    .bay-corner.bl { bottom: 6px; left: 6px; }
+    .bay-corner.br { bottom: 6px; right: 6px; }
+
+    .gauge-track { height: 6px; }
+    .gauge-marker { height: 14px; top: -4px; }
+    .gauge-scale { font-size: 0.6rem; }
+
+    .pipeline-step { padding: 16px 16px; }
+    .pipeline-step h4 { font-size: 0.95rem; }
+    .pipeline-step p { font-size: 0.8rem; }
+    .pipeline-step .step-num { font-size: 1.5rem; }
+
+    .info-card { padding: 16px 18px; }
+    .info-card h4 { font-size: 0.95rem; }
+    .info-card p { font-size: 0.82rem; }
+
+    .history-row { padding: 7px 10px; font-size: 0.7rem; gap: 8px; }
+
+    .eyebrow { font-size: 0.65rem; letter-spacing: 0.15em; }
+
+    .truth-row { flex-direction: column; gap: 4px; font-size: 0.72rem; }
+
+    .empty-state { padding: 40px 16px; }
+}
+
+/* Small mobile (max 480px) */
+@media (max-width: 480px) {
+    h1 { font-size: 1.4rem !important; }
+    .verdict-title { font-size: 1.5rem !important; }
+    .page-hero h1 { font-size: 1.3rem !important; }
+    .stat-strip { grid-template-columns: 1fr 1fr; }
+    .stat-card .value { font-size: 1.2rem; }
+    .chip { font-size: 0.62rem; padding: 3px 7px; }
+}
     </style>
     """, unsafe_allow_html=True)
 
@@ -233,17 +327,6 @@ def inject_css():
 # ============================================================
 # DATA / MODEL LOADING
 # ============================================================
-# @st.cache_resource(show_spinner=False)
-# def load_model_and_threshold(category):
-#     model_path = MODELS_DIR / f"patchcore_{category}_full.pth"
-#     if not model_path.exists():
-#         return None, None, None
-#     model = torch.load(model_path, map_location="cpu", weights_only=False)
-#     model.eval()
-#     pp = model.post_processor
-#     threshold = float(pp.image_threshold)
-#     stats = {"min": float(pp.image_min), "max": float(pp.image_max), "threshold": threshold}
-#     return model, threshold, stats
 
 @st.cache_resource(show_spinner=False)
 def load_model_and_threshold(category):
@@ -456,8 +539,6 @@ if st.session_state.history:
         st.session_state.history = []
         st.rerun()
     st.sidebar.markdown("---")
-
-# st.sidebar.caption("Built during CSIR-CSIO internship · Trained on MVTec AD dataset")
 
 
 # ============================================================
