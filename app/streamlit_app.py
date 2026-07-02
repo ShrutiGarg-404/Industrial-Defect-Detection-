@@ -106,50 +106,6 @@ def inject_css():
 
     html, body, [class*="css"] { font-family: var(--display); }
 
-    .stApp {
-        background:
-            radial-gradient(ellipse 800px 400px at 20% -10%, rgba(255,138,61,0.08), transparent),
-            radial-gradient(ellipse 600px 400px at 100% 10%, rgba(61,220,132,0.04), transparent),
-            var(--bg-deep);
-    }
-
-    .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    background: var(--bg-panel);
-    border-bottom: 1px solid var(--steel);
-    padding: 10px 12px;
-    z-index: 9998;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-.mobile-nav a {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-secondary) !important;
-    text-decoration: none !important;
-    background: var(--steel);
-    padding: 5px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--steel-light);
-    white-space: nowrap;
-}
-.mobile-nav .brand {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--text-primary) !important;
-    margin-right: 6px;
-    flex-shrink: 0;
-}
-@media (max-width: 768px) {
-    .mobile-nav { display: flex; }
-    .block-container { padding-top: 60px !important; }
-}
     #MainMenu, footer, header { visibility: hidden; }
 
     /* ===== Sidebar ===== */
