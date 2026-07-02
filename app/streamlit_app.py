@@ -62,6 +62,37 @@ COLORS = {
 # ============================================================
 def inject_css():
     st.markdown("""
+    /* ===== Mobile sidebar toggle — always visible ===== */
+@media (max-width: 768px) {
+    /* Keep collapsed control button always visible */
+    [data-testid="collapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        top: 10px !important;
+        right: 10px !important;
+        left: auto !important;
+        z-index: 99999 !important;
+        background: var(--amber) !important;
+        border-radius: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 16px rgba(255,138,61,0.5) !important;
+        border: none !important;
+    }
+    [data-testid="collapsedControl"] svg {
+        fill: #1A1208 !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
+    /* Add padding so content doesn't hide behind fixed elements */
+    .block-container {
+        padding-top: 56px !important;
+    }
+}
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
@@ -82,6 +113,43 @@ def inject_css():
             var(--bg-deep);
     }
 
+    .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--steel);
+    padding: 10px 12px;
+    z-index: 9998;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.mobile-nav a {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary) !important;
+    text-decoration: none !important;
+    background: var(--steel);
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--steel-light);
+    white-space: nowrap;
+}
+.mobile-nav .brand {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-primary) !important;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+@media (max-width: 768px) {
+    .mobile-nav { display: flex; }
+    .block-container { padding-top: 60px !important; }
+}
     #MainMenu, footer, header { visibility: hidden; }
 
     /* ===== Sidebar ===== */
@@ -544,6 +612,9 @@ def inject_css():
 #     .chip { font-size: 0.62rem; padding: 3px 7px; }
 }
     </style>
+                <div class="mobile-nav">
+    <span class="brand">◆ DefectLens</span>
+</div>
     """, unsafe_allow_html=True)
 
 
